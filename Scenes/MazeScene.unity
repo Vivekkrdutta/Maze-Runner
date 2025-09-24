@@ -150,7 +150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalCameraData
-  m_RenderShadows: 1
+  m_RenderShadows: 0
   m_RequiresDepthTextureOption: 2
   m_RequiresOpaqueTextureOption: 2
   m_CameraType: 0
@@ -225,7 +225,7 @@ Camera:
   far clip plane: 1000
   field of view: 16
   orthographic: 1
-  orthographic size: 2.52
+  orthographic size: 5.99
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -511,7 +511,7 @@ MonoBehaviour:
   mazeTransform: {fileID: 1891565897}
   cellPrefab: {fileID: 1526677035195882716, guid: 2fe4bfd25945c2d44a9fe7c32a90cc71, type: 3}
   wallBreakVisualizationTime: 0.05
-  horizontalBiasing: 0.512
+  horizontalBiasing: 0.804
   dimension: {x: 20, y: 10}
 --- !u!1 &2066971186
 GameObject:
@@ -531,7 +531,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!81 &2066971187
 AudioListener:
   m_ObjectHideFlags: 0
