@@ -27,6 +27,10 @@ public class HexMazeGenerator : MonoBehaviour
     [Range(0f,1f)]
     private float loopsPercent = 0f;
 
+    [Header("Obstacles")]
+    [Tooltip("Set this to the layer your obstacle GameObjects are on.")]
+    [SerializeField] private LayerMask obstacleLayer;
+
     [Header("Generation Settings")]
     [Tooltip("The delay between steps when visualizing the maze creation.")]
     [SerializeField] private float waitTime = 0.01f;
@@ -200,6 +204,7 @@ public class HexMazeGenerator : MonoBehaviour
     public void CreateGrid()
     {
         ClearGrid();
+
         float xSpacing, zSpacing;
         if (gridType == GridType.FlatTop)
         {
@@ -211,6 +216,10 @@ public class HexMazeGenerator : MonoBehaviour
             xSpacing = Mathf.Sqrt(3) * hexSize;
             zSpacing = 1.5f * hexSize;
         }
+
+        // The radius of the hex's inner circle, perfect for the check
+        float innerRadius = hexSize * Mathf.Sqrt(3) / 2f;
+
         currentColumns = fitToTransform ? Mathf.FloorToInt(hexMazeTransform.lossyScale.x * 10f / xSpacing) : columns;
         currentRows = fitToTransform ? Mathf.FloorToInt(hexMazeTransform.lossyScale.z * 10f / zSpacing) : rows;
         float gridWidth = (currentColumns - 1) * xSpacing;
@@ -221,10 +230,9 @@ public class HexMazeGenerator : MonoBehaviour
         {
             for (int j = 0; j < currentRows; j++)
             {
-                HexCell newHexCell = new HexCell(i, j);
-                hexGridDict.Add((i, j), newHexCell);
-                hexCells.Add(newHexCell);
-                GameObject cellGO = CreateCellGameObject(newHexCell);
+                // --- MODIFICATION START ---
+
+                // 1. Calculate the potential position of the cell first.
                 float xOffset, zOffset;
                 if (gridType == GridType.FlatTop)
                 {
@@ -236,7 +244,23 @@ public class HexMazeGenerator : MonoBehaviour
                     xOffset = i * xSpacing + (j % 2 != 0 ? xSpacing / 2f : 0f);
                     zOffset = j * zSpacing;
                 }
-                cellGO.transform.localPosition = new Vector3(xOffset, 0f, zOffset) + startPos;
+                Vector3 localPosition = new Vector3(xOffset, 0f, zOffset) + startPos;
+                Vector3 worldPosition = mazeContainer.TransformPoint(localPosition);
+
+                // 2. Use the detector to check if the spot is blocked.
+                bool isBlocked = ObstacleDetector.IsPositionBlocked(worldPosition, innerRadius,obstacleLayer);
+
+                // 3. Only create the cell if the spot is NOT blocked.
+                if (!isBlocked)
+                {
+                    HexCell newHexCell = new HexCell(i, j);
+                    hexGridDict.Add((i, j), newHexCell);
+                    hexCells.Add(newHexCell);
+
+                    GameObject cellGO = CreateCellGameObject(newHexCell);
+                    cellGO.transform.localPosition = localPosition;
+                }
+                // --- MODIFICATION END ---
             }
         }
         PopulateNeighbours();
