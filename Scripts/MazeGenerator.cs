@@ -26,13 +26,11 @@ public class MazeGenerator : MonoBehaviour
     {
         ClearMaze();
 
-        cellWidth = 1f;
-        cellHeight = 1f;
+        cellWidth = mazeTransform.localScale.x * 10f / dimension.x;
+        cellHeight = mazeTransform.localScale.z * 10f / dimension.y;
 
         float biasX = -1 * dimension.x / 2 * cellWidth;
         float biasZ = -1 * dimension.y / 2 * cellHeight;
-
-        Debug.Log("Biases are : " + biasX + ", " + biasZ);
 
         cellsArray = new Cell[dimension.x, dimension.y];
 
