@@ -1,4 +1,4 @@
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -70,6 +70,11 @@ public class HexMazeGenerator : MonoBehaviour
     {
         StopAllCoroutines();
         CreateGrid();
+        Debug.Log($"Cells: {hexCells.Count}");
+        int wallCount = 0;
+        foreach (var c in hexCells) for (int i = 0; i < 6; i++) if (c.walls[i] != null) wallCount++;
+        Debug.Log($"Wall references (total): {wallCount}. Unique walls ≈ {wallCount / 2} (expected ~3 * cells for interior grids)");
+
         StartCoroutine(ProcessMazeGeneration(loopsPercent, visualize));
     }
 
@@ -201,6 +206,7 @@ public class HexMazeGenerator : MonoBehaviour
         }
     }
 
+    // Replace your CreateGrid with this version (keeps obstacle checks & cell creation)
     public void CreateGrid()
     {
         ClearGrid();
@@ -217,7 +223,6 @@ public class HexMazeGenerator : MonoBehaviour
             zSpacing = 1.5f * hexSize;
         }
 
-        // The radius of the hex's inner circle, perfect for the check
         float innerRadius = hexSize * Mathf.Sqrt(3) / 2f;
 
         currentColumns = fitToTransform ? Mathf.FloorToInt(hexMazeTransform.lossyScale.x * 10f / xSpacing) : columns;
@@ -226,13 +231,13 @@ public class HexMazeGenerator : MonoBehaviour
         float gridHeight = (currentRows - 1) * zSpacing;
         Vector3 startPos = new Vector3(-gridWidth / 2f, 0f, -gridHeight / 2f);
 
+        // Key: create each unique edge only once
+        var wallDict = new Dictionary<string, Transform>();
+
         for (int i = 0; i < currentColumns; i++)
         {
             for (int j = 0; j < currentRows; j++)
             {
-                // --- MODIFICATION START ---
-
-                // 1. Calculate the potential position of the cell first.
                 float xOffset, zOffset;
                 if (gridType == GridType.FlatTop)
                 {
@@ -247,24 +252,22 @@ public class HexMazeGenerator : MonoBehaviour
                 Vector3 localPosition = new Vector3(xOffset, 0f, zOffset) + startPos;
                 Vector3 worldPosition = mazeContainer.TransformPoint(localPosition);
 
-                // 2. Use the detector to check if the spot is blocked.
-                bool isBlocked = ObstacleDetector.IsPositionBlocked(worldPosition, innerRadius,obstacleLayer);
-
-                // 3. Only create the cell if the spot is NOT blocked.
+                bool isBlocked = ObstacleDetector.IsPositionBlocked(worldPosition, innerRadius, obstacleLayer);
                 if (!isBlocked)
                 {
                     HexCell newHexCell = new HexCell(i, j);
                     hexGridDict.Add((i, j), newHexCell);
                     hexCells.Add(newHexCell);
 
-                    GameObject cellGO = CreateCellGameObject(newHexCell);
+                    // Create the GO and walls — pass wallDict so edges are created only once
+                    GameObject cellGO = CreateCellGameObject(newHexCell, wallDict);
                     cellGO.transform.localPosition = localPosition;
                 }
-                // --- MODIFICATION END ---
             }
         }
         PopulateNeighbours();
     }
+
 
     private void PopulateNeighbours()
     {
@@ -308,28 +311,93 @@ public class HexMazeGenerator : MonoBehaviour
         }
     }
 
-    public GameObject CreateCellGameObject(HexCell cellData)
+    // New CreateCellGameObject signature that uses the wall dictionary to reuse edges
+    public GameObject CreateCellGameObject(HexCell cellData, Dictionary<string, Transform> wallDict)
     {
         GameObject hexCellGO = new("Hex cell " + cellData.X + "," + cellData.Z);
         hexCellGO.transform.SetParent(mazeContainer);
         hexCellGO.transform.localPosition = Vector3.zero;
+
         TextMeshPro numberText = Instantiate(numberTextPrefab, hexCellGO.transform);
         numberText.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
         numberText.transform.localPosition += Vector3.up * 0.01f;
+
+        // 20 for 5 is tested, and good.
+        numberText.fontSize = 20 / 5 * hexSize;
         numberText.text = cellData.X + "," + cellData.Z;
+
         float bias = gridType == GridType.FlatTop ? 30f : 0f;
         float radius = hexSize * Mathf.Sqrt(3) / 2f;
-        for (int i = 0; i < 6; i++)
+
+        for (int dir = 0; dir < 6; dir++)
         {
-            var wallInstance = Instantiate(this.wall, hexCellGO.transform);
-            wallInstance.transform.localScale = new Vector3(wallInstance.transform.localScale.x, wallInstance.transform.localScale.y, hexSize);
-            float yAngle = (i * 60f - bias) * Mathf.Deg2Rad;
-            float x = radius * Mathf.Cos(yAngle);
-            float z = radius * Mathf.Sin(yAngle);
-            wallInstance.transform.SetLocalPositionAndRotation(new Vector3(x, 0f, z), Quaternion.Euler(0f, -i * 60f + bias, 0f));
-            cellData.walls[i] = wallInstance.transform;
+            var (nx, nz) = GetNeighbourCoords(cellData.X, cellData.Z, dir);
+            string key = MakeEdgeKey(cellData.X, cellData.Z, nx, nz);
+
+            if (wallDict != null && wallDict.TryGetValue(key, out Transform existingWall))
+            {
+                // reuse the already-created wall transform
+                cellData.walls[dir] = existingWall;
+            }
+            else
+            {
+                // create the wall once and store in dict
+                var wallInstance = Instantiate(this.wall, hexCellGO.transform);
+                wallInstance.transform.localScale = new Vector3(wallInstance.transform.localScale.x, wallInstance.transform.localScale.y, hexSize);
+                float yAngle = (dir * 60f - bias) * Mathf.Deg2Rad;
+                float x = radius * Mathf.Cos(yAngle);
+                float z = radius * Mathf.Sin(yAngle);
+                wallInstance.transform.SetLocalPositionAndRotation(new Vector3(x, 0f, z), Quaternion.Euler(0f, -dir * 60f + bias, 0f));
+                cellData.walls[dir] = wallInstance.transform;
+
+                if(wallDict != null)
+                wallDict[key] = wallInstance.transform;
+            }
         }
         return hexCellGO;
+    }
+
+    // Helper: normalized string key for an unordered edge between two hex coords
+    private string MakeEdgeKey(int x1, int z1, int x2, int z2)
+    {
+        if (x1 < x2 || (x1 == x2 && z1 <= z2))
+            return $"{x1}:{z1}-{x2}:{z2}";
+        else
+            return $"{x2}:{z2}-{x1}:{z1}";
+    }
+
+    // Helper: compute neighbour coords for a given direction (0..5)
+    // Matches the same logic you use in PopulateNeighbours
+    private (int nx, int nz) GetNeighbourCoords(int x, int z, int dir)
+    {
+        int nx = x, nz = z;
+        if (gridType == GridType.FlatTop)
+        {
+            bool isOddCol = (x % 2 != 0);
+            switch (dir)
+            {
+                case 0: nx = x + 1; nz = isOddCol ? z : z - 1; break;
+                case 1: nx = x + 1; nz = isOddCol ? z + 1 : z; break;
+                case 2: nx = x; nz = z + 1; break;
+                case 3: nx = x - 1; nz = isOddCol ? z + 1 : z; break;
+                case 4: nx = x - 1; nz = isOddCol ? z : z - 1; break;
+                case 5: nx = x; nz = z - 1; break;
+            }
+        }
+        else // PointyTop
+        {
+            bool isOddRow = (z % 2 != 0);
+            switch (dir)
+            {
+                case 0: nx = x + 1; nz = z; break;
+                case 1: nx = isOddRow ? x + 1 : x; nz = z + 1; break;
+                case 2: nx = isOddRow ? x : x - 1; nz = z + 1; break;
+                case 3: nx = x - 1; nz = z; break;
+                case 4: nx = isOddRow ? x : x - 1; nz = z - 1; break;
+                case 5: nx = isOddRow ? x + 1 : x; nz = z - 1; break;
+            }
+        }
+        return (nx, nz);
     }
 
     public void ClearGrid()

@@ -11,7 +11,7 @@ public class HexMazeEditor : Editor
         if (target is not HexMazeGenerator hexMazeGenerator) return;
 
         if (GUILayout.Button("Hex Cell"))
-            hexMazeGenerator.CreateCellGameObject(new HexMazeGenerator.HexCell(0,0));
+            hexMazeGenerator.CreateCellGameObject(new HexMazeGenerator.HexCell(0,0),null);
 
         if (GUILayout.Button("Grid"))
         {
