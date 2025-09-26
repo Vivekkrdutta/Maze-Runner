@@ -1,0 +1,91 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\3D unity Projects\\Maze Runner\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{137E53C9-3CCF-4883-123D-D62109679F16}|Assembly-CSharp.csproj|D:\\3D unity Projects\\Maze Runner\\assets\\user\\scripts\\hexmazegenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{137E53C9-3CCF-4883-123D-D62109679F16}|Assembly-CSharp.csproj|solutionrelative:assets\\user\\scripts\\hexmazegenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B67F24B9-37F6-8F37-C818-7E6B83A364C5}|Assembly-CSharp-Editor.csproj|D:\\3D unity Projects\\Maze Runner\\assets\\user\\scripts\\editor\\hexmazeeditor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B67F24B9-37F6-8F37-C818-7E6B83A364C5}|Assembly-CSharp-Editor.csproj|solutionrelative:assets\\user\\scripts\\editor\\hexmazeeditor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{137E53C9-3CCF-4883-123D-D62109679F16}|Assembly-CSharp.csproj|d:\\3d unity projects\\maze runner\\assets\\user\\scripts\\obstacle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{137E53C9-3CCF-4883-123D-D62109679F16}|Assembly-CSharp.csproj|solutionrelative:assets\\user\\scripts\\obstacle.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{137E53C9-3CCF-4883-123D-D62109679F16}|Assembly-CSharp.csproj|D:\\3D unity Projects\\Maze Runner\\assets\\user\\scripts\\mazegenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{137E53C9-3CCF-4883-123D-D62109679F16}|Assembly-CSharp.csproj|solutionrelative:assets\\user\\scripts\\mazegenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Obstacle.cs",
+              "DocumentMoniker": "D:\\3D unity Projects\\Maze Runner\\Assets\\User\\Scripts\\Obstacle.cs",
+              "RelativeDocumentMoniker": "Assets\\User\\Scripts\\Obstacle.cs",
+              "ToolTip": "D:\\3D unity Projects\\Maze Runner\\Assets\\User\\Scripts\\Obstacle.cs",
+              "RelativeToolTip": "Assets\\User\\Scripts\\Obstacle.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-25T18:13:36.366Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "HexMazeEditor.cs",
+              "DocumentMoniker": "D:\\3D unity Projects\\Maze Runner\\Assets\\User\\Scripts\\Editor\\HexMazeEditor.cs",
+              "RelativeDocumentMoniker": "Assets\\User\\Scripts\\Editor\\HexMazeEditor.cs",
+              "ToolTip": "D:\\3D unity Projects\\Maze Runner\\Assets\\User\\Scripts\\Editor\\HexMazeEditor.cs",
+              "RelativeToolTip": "Assets\\User\\Scripts\\Editor\\HexMazeEditor.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAABYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-24T19:28:03.831Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "HexMazeGenerator.cs",
+              "DocumentMoniker": "D:\\3D unity Projects\\Maze Runner\\Assets\\User\\Scripts\\HexMazeGenerator.cs",
+              "RelativeDocumentMoniker": "Assets\\User\\Scripts\\HexMazeGenerator.cs",
+              "ToolTip": "D:\\3D unity Projects\\Maze Runner\\Assets\\User\\Scripts\\HexMazeGenerator.cs",
+              "RelativeToolTip": "Assets\\User\\Scripts\\HexMazeGenerator.cs",
+              "ViewState": "AgIAAFUAAAAAAAAAAAAuwGIAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-24T18:20:58.366Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MazeGenerator.cs",
+              "DocumentMoniker": "D:\\3D unity Projects\\Maze Runner\\Assets\\User\\Scripts\\MazeGenerator.cs",
+              "RelativeDocumentMoniker": "Assets\\User\\Scripts\\MazeGenerator.cs",
+              "ToolTip": "D:\\3D unity Projects\\Maze Runner\\Assets\\User\\Scripts\\MazeGenerator.cs",
+              "RelativeToolTip": "Assets\\User\\Scripts\\MazeGenerator.cs",
+              "ViewState": "AgIAABwAAAAAAAAAAAArwCEAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-09-23T10:56:35.172Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
